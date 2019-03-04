@@ -21,24 +21,21 @@ def get_dict_config(config_filepath, schema):
 
     for k, v in grouped_rule_dataframe.indices.items():
         tmp_dict = {}
-
         for i in v:
             row = rule_dataframe.iloc[i]
             value = row.value
-            update_dict = {"target_acousticness": float(row.target_acousticness),
-                           "target_energy": float(row.target_energy),
-                           "target_danceability": float(row.target_danceability),
-                           "target_instrumentalness": float(row.target_instrumentalness),
-                           "target_valence": float(row.target_valence),
-                           "target_loudness": float(row.target_loudness),
-                           "target_liveness": float(row.target_liveness)
-                           }
-
+            update_dict = {
+                "target_acousticness": float(row.target_acousticness),
+                "target_energy": float(row.target_energy),
+                "target_danceability": float(row.target_danceability),
+                "target_instrumentalness": float(row.target_instrumentalness),
+                "target_valence": float(row.target_valence),
+                "target_loudness": float(row.target_loudness),
+                "target_liveness": float(row.target_liveness)
+            }
             if not type(row.seed_genres) == float:
                 update_dict["seed_genres"] = row.seed_genres
-
             tmp_dict.update({value: update_dict})
-
         params.update({k: tmp_dict})
 
     return params

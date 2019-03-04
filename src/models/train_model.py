@@ -129,7 +129,7 @@ class TrainMoodDetector(object):
 
 
 class TrainLandscapeDetector(object):
-    """Module to predict the landscape."""
+    """Module to predict the pred."""
 
     def __init__(self):
         """Initiator."""
@@ -198,7 +198,7 @@ class TrainLandscapeDetector(object):
         return model
 
     def fit(self, data_path):
-        """Build model to predict the landscape type from an image.
+        """Build model to predict the pred type from an image.
 
         :param data_path: (str) path of the images.
         """
@@ -208,10 +208,10 @@ class TrainLandscapeDetector(object):
         )
 
     def predict(self, image):
-        """Predict the landscape type of the image.
+        """Predict the pred type of the image.
 
         :param image: (np.array) image
-        :return: (str) landscape type
+        :return: (str) pred type
         """
         prediction = self.model.predict(image)
         classe = np.argmax(prediction, axis=1)

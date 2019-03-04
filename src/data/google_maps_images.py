@@ -45,7 +45,7 @@ class GoogleImages(object):
         :param lat: (float) latitude
         :param lng:  (float) longitude
         """
-        path = os.path.join(settings.IMAGE_STREET_PATH, f"{lat}+{lng}.jpg")
+        path = os.path.join(settings.IMAGE_GPS_PATH, f"{lat}+{lng}.jpg")
         img.convert('RGB').save(path)
 
     def image_gps(self, lat, lng):

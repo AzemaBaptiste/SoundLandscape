@@ -2,6 +2,7 @@
 import cv2
 
 from flask import Response
+import matplotlib.pyplot as plt
 
 
 class VideoCamera(object):
@@ -43,3 +44,9 @@ class VideoCamera(object):
         :return: (flask.Response) image for html
         """
         return Response(self.__gen__(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+if __name__ == '__main__':
+    obj = VideoCamera(0)
+    frm = obj.get_frame()
+    plt.imshow(frm)

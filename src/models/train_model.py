@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import cv2
+import pickle
 
 import numpy as np
 
@@ -13,6 +14,8 @@ from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Dense, Dropout
 from keras.layers import Flatten, GlobalAveragePooling2D, Activation
 from keras.preprocessing.image import ImageDataGenerator
 from keras.applications.mobilenet import preprocess_input
+
+from src import settings
 
 
 class TrainFaceDetector(object):
@@ -34,6 +37,9 @@ class TrainFaceDetector(object):
             vars()[name + "_encoding"] = face_recognition.face_encodings(vars()[name])[0]
             self.face_encoding.append(vars()[name + "_encoding"])
             self.face_name.append(name)
+        pickle.dump(self.face_encoding, open(settings.ENCO_MODEL_PATH, "wb"))
+        pickle.dump(self.face_name, open(settings.NAME_MODEL_PATH, "wb"))
+        pickle.dump(self, open(settings.FACE_MODEL_PATH, "wb"))
 
     def predict(self, image):
         """Predict the location and the name of people in the image.
@@ -41,6 +47,9 @@ class TrainFaceDetector(object):
         :param image: (np.array) image in gray
         :return: (list) (list) names & locations
         """
+        if not isinstance(image, np.ndarray):
+            image = np.asarray(image, dtype=np.uint8)
+        image.setflags(write=True)
         names = list()
         locations = face_recognition.face_locations(image)
         encodings = face_recognition.face_encodings(image, locations)
@@ -217,3 +226,10 @@ class TrainLandscapeDetector(object):
         classe = np.argmax(prediction, axis=1)
 
         return self.labels[classe]
+
+
+if __name__ == '__main__':
+    import glob
+    import os
+    paths = glob.glob(os.path.join(settings.IMAGE_FACE_PATH, "*"))
+    TrainFaceDetector().fit(paths)

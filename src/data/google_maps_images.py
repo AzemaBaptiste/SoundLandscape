@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from PIL import Image
 from io import BytesIO
+import numpy as np
 import matplotlib.pyplot as plt
 
 import os
@@ -46,7 +47,7 @@ class GoogleImages(object):
         :param lng:  (float) longitude
         """
         path = os.path.join(settings.IMAGE_GPS_PATH, f"{lat}+{lng}.jpg")
-        img.convert('RGB').save(path)
+        img.save(path)
 
     def image_gps(self, lat, lng):
         """Get image from google maps api.
@@ -59,9 +60,11 @@ class GoogleImages(object):
             "zoom": self.zoom, "roadmap": self.roadmap, "base_url": self.base_url
         })
         response = requests.get(url)
-        img = Image.open(BytesIO(response.content))
+        img = Image.open(BytesIO(response.content)).convert("RGB")
         self.show_img(img)
         self.save_image(img, lat, lng)
+
+        return np.asarray(img)
 
     def image_street(self, lat, lng):
         """Get image from google street api.

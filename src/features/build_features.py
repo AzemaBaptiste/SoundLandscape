@@ -89,8 +89,6 @@ class Featuring(object):
         :param lng: (float) longitude
         :return: (float) weather
         """
-        import pdb;
-        pdb.set_trace()
         base_url = "http://dataservice.accuweather.com"
         url = f"{base_url}/locations/v1/cities/geoposition/search?apikey={self.accuweather_key}&q={lat}%2C%20{lng}"
         key_id = self.extract_value_from_web(url)['Key']
@@ -132,9 +130,14 @@ class Featuring(object):
 
         :param lat: (str) latitude
         :param lng: (str) longitude
-        :return: (google_places) all poi
+        :return: (dict) all poi.name|poi.types
         """
-        return self.google_poi.nearby_search(lat_lng={"lat": lat, "lng": lng}, radius=50)
+        pois = self.google_poi.nearby_search(lat_lng={"lat": lat, "lng": lng}, radius=50)
+        res = {}
+        for poi in pois.places:
+            res[poi.name] = poi.types
+
+        return res
 
     def get_poi_information_from_position(self, lat, lng):
         """Select poi based on rules, and get their names and info about them.
@@ -143,7 +146,7 @@ class Featuring(object):
         :param lng: (str) longitude
         :return: (dict) poi name|information
         """
-        pois = self.get_poi_from_position(lat, lng)
+        pois = self.google_poi.nearby_search(lat_lng={"lat": lat, "lng": lng}, radius=50)
         dict_poi = dict()
         for poi in pois.places:
             if self._interesting_poi(poi):

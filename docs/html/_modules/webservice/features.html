@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>webservice.features &mdash; SoundLandscape 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SoundLandscape
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SoundLandscape</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>webservice.features</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for webservice.features</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="kn">from</span> <span class="nn">src.webservice</span> <span class="k">import</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">src.features.build_features</span> <span class="k">import</span> <span class="n">Featuring</span>
+<span class="kn">from</span> <span class="nn">src.data.google_maps_images</span> <span class="k">import</span> <span class="n">GoogleImages</span>
+
+<span class="n">FEATURES_APP</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;features_app&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+<span class="n">FEATURING</span> <span class="o">=</span> <span class="n">Featuring</span><span class="p">()</span>
+<span class="n">GOOGLE</span> <span class="o">=</span> <span class="n">GoogleImages</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="get_weather_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_weather_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_weather_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_weather_from_latlon</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the weather from the lat lng.</span>
+
+<span class="sd">    :return: (str) weather type</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+    <span class="n">lng</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_weather_from_position</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_ratio_mask_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_ratio_mask_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_ratio_mask_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_ratio_mask_from_latlon</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get mask ration from lat lng.</span>
+
+<span class="sd">    :return: (dict) ratios mask</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+    <span class="n">lng</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">GOOGLE</span><span class="o">.</span><span class="n">image_gps</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_ratio_percent_forest_water_from_picture</span><span class="p">(</span><span class="n">img</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_song_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_song_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_song_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_song_from_latlon</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get mask ration from lat lng.</span>
+
+<span class="sd">    :return: (dict) ratios mask</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+    <span class="n">lng</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">GOOGLE</span><span class="o">.</span><span class="n">image_gps</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_song_from_picture</span><span class="p">(</span><span class="n">img</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_sun_position_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_sun_position_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_sun_position_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_sun_position_from_latlon</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get sun&#39; position from latlon.</span>
+
+<span class="sd">    :return: (dict) sunset &amp; sunrise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+    <span class="n">lng</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_sun_position_time_from_position</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_all_poi_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_all_poi_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_all_poi_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_all_poi_from_latlon</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get all poi around me.</span>
+
+<span class="sd">    :return: (google_place.places) Don&#39;t use it, return complex obj</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+    <span class="n">lng</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_poi_from_position</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_interesting_poi_information_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_interesting_poi_information_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_interesting_poi_information_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_interesting_poi_information_from_latlon</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get information about some poi.</span>
+
+<span class="sd">    :return: (dict) poi name|information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
+    <span class="n">lng</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_poi_information_from_position</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, JulienW./ThibaultD./BaptisteA./AdamB.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

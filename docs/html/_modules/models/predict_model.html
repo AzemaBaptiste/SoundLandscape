@@ -142,25 +142,158 @@
             
   <h1>Source code for models.predict_model</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+
+<span class="kn">import</span> <span class="nn">face_recognition</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">keras</span>
 
 <span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="c1"># from src.models.train_model import TrainFaceDetector</span>
+
+
+<div class="viewcode-block" id="PredictFace"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictFace">[docs]</a><span class="k">class</span> <span class="nc">PredictFace</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Predict face based on a picture.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiator.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">face_encoding</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ENCO_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">face_name</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">NAME_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="PredictFace.predict"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictFace.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predict the location and the name of people in the image.</span>
+
+<span class="sd">        :param image: (np.array) image in gray</span>
+<span class="sd">        :return: (list) (list) names &amp; locations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">setflags</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">face_locations</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">encodings</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">face_encodings</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">locations</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">encoding</span> <span class="ow">in</span> <span class="n">encodings</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">compare_faces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">face_encoding</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+            <span class="k">if</span> <span class="kc">True</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="n">first_match_index</span> <span class="o">=</span> <span class="n">matches</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_name</span><span class="p">[</span><span class="n">first_match_index</span><span class="p">]</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">names</span><span class="p">,</span> <span class="n">locations</span></div></div>
 
 
 <div class="viewcode-block" id="PredictMood"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictMood">[docs]</a><span class="k">class</span> <span class="nc">PredictMood</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Module to predict the mood based on a picture.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">MOOD_MODEL_PATH</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;Initiator.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">MOOD_MODEL_PATH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mood_classes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;angry&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;disgust&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;fear&#39;</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;happy&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;neutral&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;sad&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;surprised&#39;</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="PredictMood.crop_face"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictMood.crop_face">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">crop_face</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Crop image to select only the face, but works only for the 1 person.</span>
+
+<span class="sd">        :param img: (np.array) image</span>
+<span class="sd">        :return: (np.array) image cropped</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">top</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">face_locations</span><span class="p">(</span><span class="n">img</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">img</span><span class="p">[</span><span class="n">top</span><span class="p">:</span><span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span><span class="n">right</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PredictMood.process_img"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictMood.process_img">[docs]</a>    <span class="k">def</span> <span class="nf">process_img</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform image to go through the deep architecture.</span>
+
+<span class="sd">        :param img: (PIL.image) image</span>
+<span class="sd">        :return: (np.array) image processed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">setflags</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">crop_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crop_face</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
+            <span class="n">crop_img</span> <span class="o">=</span> <span class="n">img</span>
+        <span class="n">resized</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">crop_img</span><span class="p">,</span> <span class="p">(</span><span class="mi">71</span><span class="p">,</span> <span class="mi">71</span><span class="p">))</span>
+        <span class="n">resized_gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">resized</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+        <span class="n">resized_gray</span> <span class="o">=</span> <span class="n">resized_gray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">resized_gray_scale</span> <span class="o">=</span> <span class="n">resized_gray</span> <span class="o">/</span> <span class="mf">255.0</span>
+
+        <span class="k">return</span> <span class="n">resized_gray_scale</span></div>
+
+<div class="viewcode-block" id="PredictMood.predict"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictMood.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predict the mood based on a picture.</span>
+
+<span class="sd">        :param img: (PIL.image) image</span>
+<span class="sd">        :return: (str) mood</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">processed_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">mood_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">processed_img</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mood_classes</span><span class="p">[</span><span class="n">mood_index</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="PredictLandscape"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictLandscape">[docs]</a><span class="k">class</span> <span class="nc">PredictLandscape</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Predict landscape based on a picture.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LAND_MODEL_PATH</span><span class="p">)</span></div>
+        <span class="sd">&quot;&quot;&quot;Initiator.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LAND_MODEL_PATH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">landscape_classes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;forest&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;lake&quot;</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;mountain&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;ocean&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;road&quot;</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="PredictLandscape.process_img"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictLandscape.process_img">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">process_img</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform image to go through the deep architecture.</span>
+
+<span class="sd">        :param img: (PIL.image) image</span>
+<span class="sd">        :return: (np.array) image processed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">setflags</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">resized</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+        <span class="n">resized_rgb</span> <span class="o">=</span> <span class="n">resized</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">resized_rgb_scale</span> <span class="o">=</span> <span class="n">resized_rgb</span> <span class="o">/</span> <span class="mf">255.0</span>
+
+        <span class="k">return</span> <span class="n">resized_rgb_scale</span></div>
+
+<div class="viewcode-block" id="PredictLandscape.predict"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictLandscape.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Predict the landscape based on a picture.</span>
+
+<span class="sd">        :param img: (PIL.image) image</span>
+<span class="sd">        :return: (str) landscape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">processed_img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">landscape_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">processed_img</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">landscape_classes</span><span class="p">[</span><span class="n">landscape_index</span><span class="p">]</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">model_landscape</span> <span class="o">=</span> <span class="n">PredictLandscape</span><span class="p">()</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;C:/Users/julie/PycharmProjects/SoundLandscape/data/raw/landscape/forest.jpg&quot;</span><span class="p">)</span>
+    <span class="n">landscape</span> <span class="o">=</span> <span class="n">model_landscape</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">landscape</span><span class="p">)</span>
+
+    <span class="n">model_mood</span> <span class="o">=</span> <span class="n">PredictMood</span><span class="p">()</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;C:/Users/julie/PycharmProjects/SoundLandscape/data/raw/mood/happy.jpg&quot;</span><span class="p">)</span>
+    <span class="n">mood</span> <span class="o">=</span> <span class="n">model_mood</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mood</span><span class="p">)</span>
+
+    <span class="n">model_face</span> <span class="o">=</span> <span class="n">PredictFace</span><span class="p">()</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;C:/Users/julie/PycharmProjects/SoundLandscape/data/raw/faces/adam.png&quot;</span><span class="p">)</span>
+    <span class="n">face</span> <span class="o">=</span> <span class="n">model_face</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
 </pre></div>
 
            </div>

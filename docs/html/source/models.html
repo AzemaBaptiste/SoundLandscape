@@ -159,17 +159,120 @@
 <div class="section" id="module-models.predict_model">
 <span id="models-predict-model-module"></span><h2>models.predict_model module<a class="headerlink" href="#module-models.predict_model" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="models.predict_model.PredictFace">
+<em class="property">class </em><code class="descclassname">models.predict_model.</code><code class="descname">PredictFace</code><a class="reference internal" href="../_modules/models/predict_model.html#PredictFace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictFace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Predict face based on a picture.</p>
+<dl class="method">
+<dt id="models.predict_model.PredictFace.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/predict_model.html#PredictFace.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictFace.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the location and the name of people in the image.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> – (np.array) image in gray</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(list) (list) names &amp; locations</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="models.predict_model.PredictLandscape">
 <em class="property">class </em><code class="descclassname">models.predict_model.</code><code class="descname">PredictLandscape</code><a class="reference internal" href="../_modules/models/predict_model.html#PredictLandscape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictLandscape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>.</p>
+<p>Predict landscape based on a picture.</p>
+<dl class="method">
+<dt id="models.predict_model.PredictLandscape.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/predict_model.html#PredictLandscape.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictLandscape.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the landscape based on a picture.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> – (PIL.image) image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(str) landscape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="models.predict_model.PredictLandscape.process_img">
+<em class="property">static </em><code class="descname">process_img</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/predict_model.html#PredictLandscape.process_img"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictLandscape.process_img" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform image to go through the deep architecture.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> – (PIL.image) image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(np.array) image processed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="models.predict_model.PredictMood">
 <em class="property">class </em><code class="descclassname">models.predict_model.</code><code class="descname">PredictMood</code><a class="reference internal" href="../_modules/models/predict_model.html#PredictMood"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictMood" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>.</p>
+<p>Module to predict the mood based on a picture.</p>
+<dl class="staticmethod">
+<dt id="models.predict_model.PredictMood.crop_face">
+<em class="property">static </em><code class="descname">crop_face</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/predict_model.html#PredictMood.crop_face"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictMood.crop_face" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop image to select only the face, but works only for the 1 person.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> – (np.array) image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(np.array) image cropped</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="models.predict_model.PredictMood.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/predict_model.html#PredictMood.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictMood.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the mood based on a picture.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> – (PIL.image) image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(str) mood</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="models.predict_model.PredictMood.process_img">
+<code class="descname">process_img</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/predict_model.html#PredictMood.process_img"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.predict_model.PredictMood.process_img" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform image to go through the deep architecture.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> – (PIL.image) image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(np.array) image processed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -216,7 +319,7 @@
 <dt id="models.train_model.TrainLandscapeDetector">
 <em class="property">class </em><code class="descclassname">models.train_model.</code><code class="descname">TrainLandscapeDetector</code><a class="reference internal" href="../_modules/models/train_model.html#TrainLandscapeDetector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.train_model.TrainLandscapeDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Module to predict the landscape.</p>
+<p>Module to predict the pred.</p>
 <dl class="method">
 <dt id="models.train_model.TrainLandscapeDetector.build_generator">
 <code class="descname">build_generator</code><span class="sig-paren">(</span><em>data_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/train_model.html#TrainLandscapeDetector.build_generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.train_model.TrainLandscapeDetector.build_generator" title="Permalink to this definition">¶</a></dt>
@@ -234,7 +337,7 @@
 <dl class="method">
 <dt id="models.train_model.TrainLandscapeDetector.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>data_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/train_model.html#TrainLandscapeDetector.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.train_model.TrainLandscapeDetector.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build model to predict the landscape type from an image.</p>
+<dd><p>Build model to predict the pred type from an image.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -248,14 +351,14 @@
 <dl class="method">
 <dt id="models.train_model.TrainLandscapeDetector.predict">
 <code class="descname">predict</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/train_model.html#TrainLandscapeDetector.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.train_model.TrainLandscapeDetector.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Predict the landscape type of the image.</p>
+<dd><p>Predict the pred type of the image.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> – (np.array) image</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(str) landscape type</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(str) pred type</td>
 </tr>
 </tbody>
 </table>

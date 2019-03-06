@@ -1,7 +1,14 @@
-src
-===
+
+
 
 .. toctree::
    :maxdepth: 4
 
-   src
+   
+   analysis
+   config
+   data
+   features
+   models
+   visualization
+   webservice

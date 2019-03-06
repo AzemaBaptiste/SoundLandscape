@@ -18,7 +18,11 @@ def get_landscape_from_image():
 
     :return: (src) landscape
     """
-    img = np.fromstring(request.data, np.uint8)
+    try:
+        data = request.data
+    except Exception as _:
+        data = request.content
+    img = np.fromstring(data, np.uint8)
     img = cv2.imdecode(img, cv2.IMREAD_COLOR)
 
     return status.get_resource(LANDSCAPE_MODEL.predict(img))

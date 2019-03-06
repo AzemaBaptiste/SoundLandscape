@@ -83,6 +83,7 @@
 <li><a class="reference internal" href="#">data package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-data.google_maps_images">data.google_maps_images module</a></li>
+<li><a class="reference internal" href="#module-data.webcam_images">data.webcam_images module</a></li>
 <li><a class="reference internal" href="#module-data">Module contents</a></li>
 </ul>
 </li>
@@ -226,6 +227,44 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>img</strong> – (PIL) image</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.webcam_images">
+<span id="data-webcam-images-module"></span><h2>data.webcam_images module<a class="headerlink" href="#module-data.webcam_images" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="data.webcam_images.VideoCamera">
+<em class="property">class </em><code class="descclassname">data.webcam_images.</code><code class="descname">VideoCamera</code><span class="sig-paren">(</span><em>camera=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/webcam_images.html#VideoCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.webcam_images.VideoCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Read video from camera.</p>
+<dl class="method">
+<dt id="data.webcam_images.VideoCamera.get_frame">
+<code class="descname">get_frame</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/webcam_images.html#VideoCamera.get_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.webcam_images.VideoCamera.get_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get frame from camera.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(np.array) image</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.webcam_images.VideoCamera.streaming_images">
+<code class="descname">streaming_images</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/webcam_images.html#VideoCamera.streaming_images"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.webcam_images.VideoCamera.streaming_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Streaming video to web.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(flask.Response) image for html</td>
 </tr>
 </tbody>
 </table>

@@ -81,8 +81,6 @@
               <!-- Local TOC -->
               <div class="local-toc"><ul>
 <li><a class="reference internal" href="#">analysis package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-analysis.google_maps_images">analysis.google_maps_images module</a></li>
 <li><a class="reference internal" href="#module-analysis">Module contents</a></li>
 </ul>
 </li>
@@ -152,57 +150,6 @@
             
   <div class="section" id="analysis-package">
 <h1>analysis package<a class="headerlink" href="#analysis-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-analysis.google_maps_images">
-<span id="analysis-google-maps-images-module"></span><h2>analysis.google_maps_images module<a class="headerlink" href="#module-analysis.google_maps_images" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="analysis.google_maps_images.GoogleImages">
-<em class="property">class </em><code class="descclassname">analysis.google_maps_images.</code><code class="descname">GoogleImages</code><span class="sig-paren">(</span><em>show=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/google_maps_images.html#GoogleImages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.google_maps_images.GoogleImages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Analyse the % of water/forest/mountain in a gmaps picture.</p>
-<dl class="method">
-<dt id="analysis.google_maps_images.GoogleImages.compute_ratio">
-<code class="descname">compute_ratio</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/google_maps_images.html#GoogleImages.compute_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.google_maps_images.GoogleImages.compute_ratio" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the ratio of forest &amp; water.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="analysis.google_maps_images.GoogleImages.get_image_mask">
-<code class="descname">get_image_mask</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/google_maps_images.html#GoogleImages.get_image_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.google_maps_images.GoogleImages.get_image_mask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Select only the image area which contains forest or water.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> – (PIL) image to analysis</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) np.array of the masks</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="analysis.google_maps_images.GoogleImages.main">
-<code class="descname">main</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/analysis/google_maps_images.html#GoogleImages.main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#analysis.google_maps_images.GoogleImages.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main function.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> – (PIL) image to analysis</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) ratios</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-analysis">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-analysis" title="Permalink to this headline">¶</a></h2>
 </div>

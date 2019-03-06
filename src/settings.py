@@ -20,3 +20,5 @@ NAME_MODEL_PATH = os.path.join(PROJECT_DIR, "models", "face_names.p")
 
 accuweather_key = os.environ.get("accuweathher_api_key")
 google_key = os.environ.get("google_key")
+spotify_id = os.environ.get("spotify_id")
+spotify_pwd = os.environ.get("spotify_pwd")

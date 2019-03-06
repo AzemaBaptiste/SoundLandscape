@@ -144,6 +144,7 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -188,8 +189,8 @@
 <span class="sd">        :param lat: (float) latitude</span>
 <span class="sd">        :param lng:  (float) longitude</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">IMAGE_STREET_PATH</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{lat}</span><span class="s2">+</span><span class="si">{lng}</span><span class="s2">.jpg&quot;</span><span class="p">)</span>
-        <span class="n">img</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;RGB&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">IMAGE_GPS_PATH</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{lat}</span><span class="s2">+</span><span class="si">{lng}</span><span class="s2">.jpg&quot;</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GoogleImages.image_gps"><a class="viewcode-back" href="../../source/data.html#data.google_maps_images.GoogleImages.image_gps">[docs]</a>    <span class="k">def</span> <span class="nf">image_gps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get image from google maps api.</span>
@@ -202,9 +203,11 @@
             <span class="s2">&quot;zoom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span><span class="p">,</span> <span class="s2">&quot;roadmap&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">roadmap</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span>
         <span class="p">})</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s2">&quot;RGB&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">save_image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GoogleImages.image_street"><a class="viewcode-back" href="../../source/data.html#data.google_maps_images.GoogleImages.image_street">[docs]</a>    <span class="k">def</span> <span class="nf">image_street</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get image from google street api.</span>

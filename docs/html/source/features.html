@@ -179,6 +179,96 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="features.build_features.Featuring.get_image_mask">
+<code class="descname">get_image_mask</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/build_features.html#Featuring.get_image_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.build_features.Featuring.get_image_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select only the image area which contains forest or water.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> – (PIL) image to analysis</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) np.array of the masks</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="features.build_features.Featuring.get_poi_from_position">
+<code class="descname">get_poi_from_position</code><span class="sig-paren">(</span><em>lat</em>, <em>lng</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/build_features.html#Featuring.get_poi_from_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.build_features.Featuring.get_poi_from_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the poi around me.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lat</strong> – (str) latitude</li>
+<li><strong>lng</strong> – (str) longitude</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(dict) all poi.name|poi.types</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="features.build_features.Featuring.get_poi_information_from_position">
+<code class="descname">get_poi_information_from_position</code><span class="sig-paren">(</span><em>lat</em>, <em>lng</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/build_features.html#Featuring.get_poi_information_from_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.build_features.Featuring.get_poi_information_from_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select poi based on rules, and get their names and info about them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>lat</strong> – (str) latitude</li>
+<li><strong>lng</strong> – (str) longitude</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(dict) poi name|information</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="features.build_features.Featuring.get_ratio_percent_forest_water_from_picture">
+<code class="descname">get_ratio_percent_forest_water_from_picture</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/build_features.html#Featuring.get_ratio_percent_forest_water_from_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.build_features.Featuring.get_ratio_percent_forest_water_from_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get ratio based on a gsp image.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> – (np.array) image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) ratios</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="features.build_features.Featuring.get_song_from_picture">
+<code class="descname">get_song_from_picture</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/build_features.html#Featuring.get_song_from_picture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.build_features.Featuring.get_song_from_picture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get song based on a gsp image.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> – (np.array) image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(str) kind of song</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="features.build_features.Featuring.get_sun_position_time_from_position">
 <code class="descname">get_sun_position_time_from_position</code><span class="sig-paren">(</span><em>lat</em>, <em>lng</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/build_features.html#Featuring.get_sun_position_time_from_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.build_features.Featuring.get_sun_position_time_from_position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the sunrise and sunset based on lat, long &amp; time.</p>

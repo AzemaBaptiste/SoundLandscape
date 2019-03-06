@@ -144,6 +144,7 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -156,6 +157,8 @@
 <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Flatten</span><span class="p">,</span> <span class="n">GlobalAveragePooling2D</span><span class="p">,</span> <span class="n">Activation</span>
 <span class="kn">from</span> <span class="nn">keras.preprocessing.image</span> <span class="k">import</span> <span class="n">ImageDataGenerator</span>
 <span class="kn">from</span> <span class="nn">keras.applications.mobilenet</span> <span class="k">import</span> <span class="n">preprocess_input</span>
+
+<span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">settings</span>
 
 
 <div class="viewcode-block" id="TrainFaceDetector"><a class="viewcode-back" href="../../source/models.html#models.train_model.TrainFaceDetector">[docs]</a><span class="k">class</span> <span class="nc">TrainFaceDetector</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -176,7 +179,10 @@
             <span class="nb">vars</span><span class="p">()[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">load_image_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
             <span class="nb">vars</span><span class="p">()[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_encoding&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">face_encodings</span><span class="p">(</span><span class="nb">vars</span><span class="p">()[</span><span class="n">name</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">face_encoding</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">vars</span><span class="p">()[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_encoding&quot;</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">face_name</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">face_name</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">face_encoding</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ENCO_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">face_name</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">NAME_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">FACE_MODEL_PATH</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="TrainFaceDetector.predict"><a class="viewcode-back" href="../../source/models.html#models.train_model.TrainFaceDetector.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Predict the location and the name of people in the image.</span>
@@ -184,6 +190,9 @@
 <span class="sd">        :param image: (np.array) image in gray</span>
 <span class="sd">        :return: (list) (list) names &amp; locations</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">setflags</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">face_locations</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="n">encodings</span> <span class="o">=</span> <span class="n">face_recognition</span><span class="o">.</span><span class="n">face_encodings</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">locations</span><span class="p">)</span>
@@ -272,7 +281,7 @@
 
 
 <div class="viewcode-block" id="TrainLandscapeDetector"><a class="viewcode-back" href="../../source/models.html#models.train_model.TrainLandscapeDetector">[docs]</a><span class="k">class</span> <span class="nc">TrainLandscapeDetector</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Module to predict the landscape.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Module to predict the pred.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiator.&quot;&quot;&quot;</span>
@@ -341,7 +350,7 @@
         <span class="k">return</span> <span class="n">model</span>
 
 <div class="viewcode-block" id="TrainLandscapeDetector.fit"><a class="viewcode-back" href="../../source/models.html#models.train_model.TrainLandscapeDetector.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Build model to predict the landscape type from an image.</span>
+        <span class="sd">&quot;&quot;&quot;Build model to predict the pred type from an image.</span>
 
 <span class="sd">        :param data_path: (str) path of the images.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -351,15 +360,22 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrainLandscapeDetector.predict"><a class="viewcode-back" href="../../source/models.html#models.train_model.TrainLandscapeDetector.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Predict the landscape type of the image.</span>
+        <span class="sd">&quot;&quot;&quot;Predict the pred type of the image.</span>
 
 <span class="sd">        :param image: (np.array) image</span>
-<span class="sd">        :return: (str) landscape type</span>
+<span class="sd">        :return: (str) pred type</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
         <span class="n">classe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">classe</span><span class="p">]</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">glob</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">IMAGE_FACE_PATH</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">))</span>
+    <span class="n">TrainFaceDetector</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
 </pre></div>
 
            </div>

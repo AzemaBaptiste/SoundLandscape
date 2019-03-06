@@ -12,6 +12,14 @@ data.google\_maps\_images module
     :undoc-members:
     :show-inheritance:
 
+data.webcam\_images module
+--------------------------
+
+.. automodule:: data.webcam_images
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

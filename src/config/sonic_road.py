@@ -2,9 +2,13 @@
 import math
 import bisect
 import datetime
+import spotipy
 import pandas as pd
 
 from dateutil import parser
+import spotipy.oauth2 as oauth2
+
+from src import settings
 
 
 def get_dict_config(config_filepath, schema):
@@ -109,3 +113,24 @@ def category_from_now_sunset_sunrise_time(now_time, sunrise_time, sunset_time):
     categories = ["night", "sunrise", "morning", "afternoon", "sunset", "night"]
 
     return categories[bisect_index]
+
+
+class SonicRoadSettings(object):
+    """Some utils function for SonicRoad."""
+
+    def __init__(self):
+        """Initiator."""
+        self.credentials = oauth2.SpotifyClientCredentials(
+            client_id=settings.spotify_id,
+            client_secret=settings.spotify_pwd
+        )
+
+    def get_reco_from_params(self, **kwargs):
+        """Get spotify recommendations.
+
+        :return: (str) URL of mp3 preview of the recommended song
+        """
+        token = self.credentials.get_access_token()
+        spotify = spotipy.Spotify(auth=token)
+
+        return spotify.recommendations(limit=50, **kwargs)

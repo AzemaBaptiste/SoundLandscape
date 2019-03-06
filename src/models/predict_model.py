@@ -74,7 +74,10 @@ class PredictMood(object):
         if not isinstance(img, np.ndarray):
             img = np.asarray(img, dtype=np.uint8)
         img.setflags(write=True)
-        crop_img = self.crop_face(img)
+        try:
+            crop_img = self.crop_face(img)
+        except Exception as _:
+            crop_img = img
         resized = cv2.resize(crop_img, (71, 71))
         resized_gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
         resized_gray = resized_gray[np.newaxis, :, :, np.newaxis]

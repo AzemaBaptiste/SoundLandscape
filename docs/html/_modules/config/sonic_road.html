@@ -145,9 +145,13 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">bisect</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">spotipy</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
+<span class="kn">import</span> <span class="nn">spotipy.oauth2</span> <span class="k">as</span> <span class="nn">oauth2</span>
+
+<span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">settings</span>
 
 
 <div class="viewcode-block" id="get_dict_config"><a class="viewcode-back" href="../../source/config.html#config.sonic_road.get_dict_config">[docs]</a><span class="k">def</span> <span class="nf">get_dict_config</span><span class="p">(</span><span class="n">config_filepath</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
@@ -164,24 +168,21 @@
 
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">grouped_rule_dataframe</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">tmp_dict</span> <span class="o">=</span> <span class="p">{}</span>
-
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
             <span class="n">row</span> <span class="o">=</span> <span class="n">rule_dataframe</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">value</span>
-            <span class="n">update_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;target_acousticness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_acousticness</span><span class="p">),</span>
-                           <span class="s2">&quot;target_energy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_energy</span><span class="p">),</span>
-                           <span class="s2">&quot;target_danceability&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_danceability</span><span class="p">),</span>
-                           <span class="s2">&quot;target_instrumentalness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_instrumentalness</span><span class="p">),</span>
-                           <span class="s2">&quot;target_valence&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_valence</span><span class="p">),</span>
-                           <span class="s2">&quot;target_loudness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_loudness</span><span class="p">),</span>
-                           <span class="s2">&quot;target_liveness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_liveness</span><span class="p">)</span>
-                           <span class="p">}</span>
-
+            <span class="n">update_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;target_acousticness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_acousticness</span><span class="p">),</span>
+                <span class="s2">&quot;target_energy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_energy</span><span class="p">),</span>
+                <span class="s2">&quot;target_danceability&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_danceability</span><span class="p">),</span>
+                <span class="s2">&quot;target_instrumentalness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_instrumentalness</span><span class="p">),</span>
+                <span class="s2">&quot;target_valence&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_valence</span><span class="p">),</span>
+                <span class="s2">&quot;target_loudness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_loudness</span><span class="p">),</span>
+                <span class="s2">&quot;target_liveness&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">target_liveness</span><span class="p">)</span>
+            <span class="p">}</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">seed_genres</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
                 <span class="n">update_dict</span><span class="p">[</span><span class="s2">&quot;seed_genres&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">seed_genres</span>
-
             <span class="n">tmp_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">value</span><span class="p">:</span> <span class="n">update_dict</span><span class="p">})</span>
-
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">tmp_dict</span><span class="p">})</span>
 
     <span class="k">return</span> <span class="n">params</span></div>
@@ -255,6 +256,27 @@
     <span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;night&quot;</span><span class="p">,</span> <span class="s2">&quot;sunrise&quot;</span><span class="p">,</span> <span class="s2">&quot;morning&quot;</span><span class="p">,</span> <span class="s2">&quot;afternoon&quot;</span><span class="p">,</span> <span class="s2">&quot;sunset&quot;</span><span class="p">,</span> <span class="s2">&quot;night&quot;</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">categories</span><span class="p">[</span><span class="n">bisect_index</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="SonicRoadSettings"><a class="viewcode-back" href="../../source/config.html#config.sonic_road.SonicRoadSettings">[docs]</a><span class="k">class</span> <span class="nc">SonicRoadSettings</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Some utils function for SonicRoad.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiator.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">oauth2</span><span class="o">.</span><span class="n">SpotifyClientCredentials</span><span class="p">(</span>
+            <span class="n">client_id</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">spotify_id</span><span class="p">,</span>
+            <span class="n">client_secret</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">spotify_pwd</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SonicRoadSettings.get_reco_from_params"><a class="viewcode-back" href="../../source/config.html#config.sonic_road.SonicRoadSettings.get_reco_from_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_reco_from_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get spotify recommendations.</span>
+
+<span class="sd">        :return: (str) URL of mp3 preview of the recommended song</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="o">.</span><span class="n">get_access_token</span><span class="p">()</span>
+        <span class="n">spotify</span> <span class="o">=</span> <span class="n">spotipy</span><span class="o">.</span><span class="n">Spotify</span><span class="p">(</span><span class="n">auth</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">spotify</span><span class="o">.</span><span class="n">recommendations</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

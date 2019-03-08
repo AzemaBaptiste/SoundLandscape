@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import cv2
-import json
 
 from flask import Blueprint, send_file, make_response
 
-from src.webservice import status
 from src.data.webcam_images import VideoCamera
 
 CAMERA_APP = Blueprint('camera_app', __name__)

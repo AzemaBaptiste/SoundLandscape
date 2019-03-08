@@ -22,3 +22,5 @@ accuweather_key = os.environ.get("accuweathher_api_key")
 google_key = os.environ.get("google_key")
 spotify_id = os.environ.get("spotify_id")
 spotify_pwd = os.environ.get("spotify_pwd")
+
+RULES_PATH = os.path.join(PROJECT_DIR, "references", "settings.csv")

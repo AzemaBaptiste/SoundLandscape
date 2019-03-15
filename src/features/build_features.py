@@ -11,6 +11,7 @@ from PIL import Image
 from googleplaces import GooglePlaces
 
 from src import settings
+from src.data.google_maps_images import GoogleImages
 from src.config.welcoming_sequence import WelcomingSequenceSettings
 
 
@@ -21,6 +22,7 @@ class Featuring(object):
         """Initiator."""
         self.lng = 2.233111
         self.lat = 48.830446
+        self.GOOGLE = GoogleImages()
         self.accuweather_key = settings.accuweather_key
         self.google_key = settings.google_key
         self.google_poi = GooglePlaces(self.google_key)
@@ -60,15 +62,17 @@ class Featuring(object):
 
         return self._compute_ratio(**masks)
 
-    def get_song_from_picture(self, image):
+    def get_song_from_latlon(self, lat, lon):
         """Get song based on a gsp image.
 
-        :param image: (np.array) image
+        :param lat: (float) latitude
+        :param lon: (float) long
         :return: (str) kind of song
         """
+        image = self.GOOGLE.image_gps(lat, lon)
         ratios = self.get_ratio_percent_forest_water_from_picture(image)
         max_key = max(ratios.items(), key=operator.itemgetter(1))[0]
-        if ratios[max_key] > 0.2:
+        if ratios[max_key] > 0.1:
             return max_key
         else:
             return None
@@ -119,8 +123,8 @@ class Featuring(object):
         :return: (bool) True if we've 1 or more good poi
         """
         list_poi = [
-            'art_gallery', 'embassy', 'museum',
-            'neighborhood', 'park', 'school'
+            'art_gallery', 'embassy', 'museum', 'stadium',
+            'neighborhood', 'park', 'school', 'gym'
         ]
 
         return bool(len(set(list_poi).intersection(set(poi.types))) > 0)
@@ -132,7 +136,7 @@ class Featuring(object):
         :param lng: (str) longitude
         :return: (dict) all poi.name|poi.types
         """
-        pois = self.google_poi.nearby_search(lat_lng={"lat": lat, "lng": lng}, radius=50)
+        pois = self.google_poi.nearby_search(lat_lng={"lat": lat, "lng": lng}, radius=200)
         res = {}
         for poi in pois.places:
             res[poi.name] = poi.types
@@ -146,15 +150,15 @@ class Featuring(object):
         :param lng: (str) longitude
         :return: (dict) poi name|information
         """
-        pois = self.google_poi.nearby_search(lat_lng={"lat": lat, "lng": lng}, radius=50)
+        pois = self.google_poi.nearby_search(lat_lng={"lat": lat, "lng": lng}, radius=150)
         dict_poi = dict()
         for poi in pois.places:
             if self._interesting_poi(poi):
-                dict_poi[poi.name] = self.welcome.information_about_poi(poi)
+                dict_poi[poi.name] = [poi.types, self.welcome.information_about_poi(poi)]
 
         if bool(dict_poi):
             return dict_poi
-        return "None"
+        return dict_poi
 
 
 if __name__ == '__main__':

@@ -152,7 +152,6 @@
 <span class="kn">import</span> <span class="nn">keras</span>
 
 <span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">settings</span>
-<span class="c1"># from src.models.train_model import TrainFaceDetector</span>
 
 
 <div class="viewcode-block" id="PredictFace"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictFace">[docs]</a><span class="k">class</span> <span class="nc">PredictFace</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -245,10 +244,20 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initiator.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LAND_MODEL_PATH</span><span class="p">)</span>
+        <span class="n">json_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LAND_ARCHI_PATH</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">loaded_model_json</span> <span class="o">=</span> <span class="n">json_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">json_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">model_from_json</span><span class="p">(</span><span class="n">loaded_model_json</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LAND_MODEL_PATH</span><span class="p">)</span>
+        <span class="c1"># self.model = keras.models.load_model(settings.LAND_MODEL_PATH)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">landscape_classes</span> <span class="o">=</span> <span class="p">{</span>
             <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;city&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;forest&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;lake&quot;</span><span class="p">,</span>
             <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;mountain&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;ocean&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;road&quot;</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">landscape_classes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;apartment&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;bridge&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;congestion&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;construction&quot;</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;forest&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;highway&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;parking&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="s2">&quot;promenade&quot;</span><span class="p">,</span>
+            <span class="mi">8</span><span class="p">:</span> <span class="s2">&quot;street&quot;</span>
         <span class="p">}</span>
 
 <div class="viewcode-block" id="PredictLandscape.process_img"><a class="viewcode-back" href="../../source/models.html#models.predict_model.PredictLandscape.process_img">[docs]</a>    <span class="nd">@staticmethod</span>

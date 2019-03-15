@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import math
 import bisect
 import datetime
@@ -33,6 +34,8 @@ class SonicRoadSettings(object):
             'seed_genres': str
         }
         self.rules = self.get_dict_config(settings.RULES_PATH, self.schema)
+        self.mood_preferences = ""
+        self.driver_genre_preferences = ""
 
     @staticmethod
     def get_dict_config(config_filepath, schema):
@@ -69,24 +72,22 @@ class SonicRoadSettings(object):
 
         return params
 
-    @staticmethod
-    def add_config_dict(base_dict, dict_to_add):
+    def add_config_dict(self, dict_to_add):
         """Adds a dictionary to base one. The parameters are added to the base dict.
 
-        :param base_dict: (dict) base dict
         :param dict_to_add: (dict) dict to add
         :return: (dict) a resulting dictionary that is made with the following rules
         """
         for variable, d in dict_to_add.items():
             for value, dd in d.items():
                 for param, param_value in dd.items():
-                    base_value = base_dict[variable][value][param]
+                    base_value = self.rules[variable][value][param]
                     try:
-                        base_dict[variable][value][param] = base_value + param_value
+                        self.rules[variable][value][param] = base_value + param_value
                     finally:
                         pass
 
-        return base_dict
+        return self.rules
 
     @staticmethod
     def sigmoid_from_speed(speed, min, max, neutral_speed):
@@ -115,7 +116,7 @@ class SonicRoadSettings(object):
             return speed * 2 - 80
 
     @staticmethod
-    def category_from_now_sunset_sunrise_time(now_time, sunrise_time, sunset_time):
+    def category_from_now_sunset_sunrise_time(**kwargs):
         """Get category (among night, afternoon, morning, sunset, sunrise) based on sunset, sunrise and now time.
 
         :param now_time: (datetime) local time in str ex : 2019-02-06T07:13:15+00:00
@@ -123,9 +124,9 @@ class SonicRoadSettings(object):
         :param sunset_time: (datetime) local sunset time in str ex : 2019-02-06T07:13:15+00:00
         :return: (str) night, afternoon, morning, sunset or sunrise
         """
-        now_time = parser.parse(now_time)
-        sunrise_time = parser.parse(sunrise_time)
-        sunset_time = parser.parse(sunset_time)
+        now_time = parser.parse(kwargs["now_time"])
+        sunrise_time = parser.parse(kwargs["sunrise_time"])
+        sunset_time = parser.parse(kwargs["sunset_time"])
         noon_time = now_time.replace(hour=12, minute=0, second=0)
 
         sunrise_time_start = sunrise_time - datetime.timedelta(minutes=15)
@@ -139,7 +140,27 @@ class SonicRoadSettings(object):
 
         return categories[bisect_index]
 
-    def get_reco_from_params(self, **kwargs):
+    def load_user_preferences(self, driver):
+        """Load user preferences.
+
+        :arg driver: (str) driver name
+        :return: (dict) read user preferences
+        """
+        with open(settings.USER_PREFERENCES_PATH) as f:
+            driver_genre_preferences = json.load(f)
+        self.driver_genre_preferences = driver_genre_preferences[driver]
+
+        return self.driver_genre_preferences
+
+    def load_mood_preferences(self, mood):
+        """Load user preferences.
+
+        :arg mood: (str) mood
+        :return: (dict) read user preferences
+        """
+        return self.rules[mood]
+
+    def get_recommendations_from_params(self, **kwargs):
         """Get spotify recommendations.
 
         :return: (str) URL of mp3 preview of the recommended song

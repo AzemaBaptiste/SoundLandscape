@@ -164,45 +164,24 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Some utils function for SonicRoad.</p>
 <dl class="method">
-<dt id="config.sonic_road.SonicRoadSettings.get_reco_from_params">
-<code class="descname">get_reco_from_params</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.get_reco_from_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.get_reco_from_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get spotify recommendations.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(str) URL of mp3 preview of the recommended song</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="config.sonic_road.add_config_dict">
-<code class="descclassname">config.sonic_road.</code><code class="descname">add_config_dict</code><span class="sig-paren">(</span><em>base_dict</em>, <em>dict_to_add</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#add_config_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.add_config_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="config.sonic_road.SonicRoadSettings.add_config_dict">
+<code class="descname">add_config_dict</code><span class="sig-paren">(</span><em>dict_to_add</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.add_config_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.add_config_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a dictionary to base one. The parameters are added to the base dict.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>base_dict</strong> – (dict) base dict</li>
-<li><strong>dict_to_add</strong> – (dict) dict to add</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dict_to_add</strong> – (dict) dict to add</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(dict) a resulting dictionary that is made with the following rules</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) a resulting dictionary that is made with the following rules</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="config.sonic_road.category_from_now_sunset_sunrise_time">
-<code class="descclassname">config.sonic_road.</code><code class="descname">category_from_now_sunset_sunrise_time</code><span class="sig-paren">(</span><em>now_time</em>, <em>sunrise_time</em>, <em>sunset_time</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#category_from_now_sunset_sunrise_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.category_from_now_sunset_sunrise_time" title="Permalink to this definition">¶</a></dt>
+<dl class="staticmethod">
+<dt id="config.sonic_road.SonicRoadSettings.category_from_now_sunset_sunrise_time">
+<em class="property">static </em><code class="descname">category_from_now_sunset_sunrise_time</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.category_from_now_sunset_sunrise_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.category_from_now_sunset_sunrise_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get category (among night, afternoon, morning, sunset, sunrise) based on sunset, sunrise and now time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -222,25 +201,76 @@
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="config.sonic_road.get_dict_config">
-<code class="descclassname">config.sonic_road.</code><code class="descname">get_dict_config</code><span class="sig-paren">(</span><em>config_filepath</em>, <em>schema</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#get_dict_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.get_dict_config" title="Permalink to this definition">¶</a></dt>
+<dl class="staticmethod">
+<dt id="config.sonic_road.SonicRoadSettings.get_dict_config">
+<em class="property">static </em><code class="descname">get_dict_config</code><span class="sig-paren">(</span><em>config_filepath</em>, <em>schema</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.get_dict_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.get_dict_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the csv file to get a correct config file in python dict type.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config_filepath</strong> – (str) the filepath to the meta rule python dict</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>config_filepath</strong> – (str) the filepath to the meta rule python dict</li>
+<li><strong>schema</strong> – (dict) file schema</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) python config file dictionary</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">(dict) python config file dictionary</p>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="config.sonic_road.min_tempo_from_speed">
-<code class="descclassname">config.sonic_road.</code><code class="descname">min_tempo_from_speed</code><span class="sig-paren">(</span><em>speed</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#min_tempo_from_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.min_tempo_from_speed" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="config.sonic_road.SonicRoadSettings.get_recommendations_from_params">
+<code class="descname">get_recommendations_from_params</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.get_recommendations_from_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.get_recommendations_from_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get spotify recommendations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(str) URL of mp3 preview of the recommended song</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="config.sonic_road.SonicRoadSettings.load_mood_preferences">
+<code class="descname">load_mood_preferences</code><span class="sig-paren">(</span><em>mood</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.load_mood_preferences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.load_mood_preferences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load user preferences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mood</strong> – (str) mood</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) read user preferences</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="config.sonic_road.SonicRoadSettings.load_user_preferences">
+<code class="descname">load_user_preferences</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.load_user_preferences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.load_user_preferences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load user preferences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>driver</strong> – (str) driver name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(dict) read user preferences</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="config.sonic_road.SonicRoadSettings.min_tempo_from_speed">
+<em class="property">static </em><code class="descname">min_tempo_from_speed</code><span class="sig-paren">(</span><em>speed</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.min_tempo_from_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.min_tempo_from_speed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get min_tempo from speed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -254,9 +284,9 @@
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="config.sonic_road.sigmoid_from_speed">
-<code class="descclassname">config.sonic_road.</code><code class="descname">sigmoid_from_speed</code><span class="sig-paren">(</span><em>speed</em>, <em>min</em>, <em>max</em>, <em>neutral_speed</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#sigmoid_from_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.sigmoid_from_speed" title="Permalink to this definition">¶</a></dt>
+<dl class="staticmethod">
+<dt id="config.sonic_road.SonicRoadSettings.sigmoid_from_speed">
+<em class="property">static </em><code class="descname">sigmoid_from_speed</code><span class="sig-paren">(</span><em>speed</em>, <em>min</em>, <em>max</em>, <em>neutral_speed</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/config/sonic_road.html#SonicRoadSettings.sigmoid_from_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.sonic_road.SonicRoadSettings.sigmoid_from_speed" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the energy function based on speed (the smooth coeff 0.1 is for now fixed).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -275,6 +305,8 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
 </dd></dl>
 
 </div>

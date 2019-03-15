@@ -146,6 +146,7 @@
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span>
 
+<span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">src.webservice</span> <span class="k">import</span> <span class="n">status</span>
 <span class="kn">from</span> <span class="nn">src.features.build_features</span> <span class="k">import</span> <span class="n">Featuring</span>
 <span class="kn">from</span> <span class="nn">src.data.google_maps_images</span> <span class="k">import</span> <span class="n">GoogleImages</span>
@@ -153,6 +154,18 @@
 <span class="n">FEATURES_APP</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;features_app&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 <span class="n">FEATURING</span> <span class="o">=</span> <span class="n">Featuring</span><span class="p">()</span>
 <span class="n">GOOGLE</span> <span class="o">=</span> <span class="n">GoogleImages</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="get_lat_lon_time"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_lat_lon_time">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_lat_lon_time&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_lat_lon_time</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get the lat lon &amp; datetime from the picture.</span>
+
+<span class="sd">    :return: (dict) lat lon data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">lat_lon</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_weather_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_weather_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_weather_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
@@ -191,9 +204,8 @@
     <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
     <span class="n">lat</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span>
     <span class="n">lng</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">GOOGLE</span><span class="o">.</span><span class="n">image_gps</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_song_from_picture</span><span class="p">(</span><span class="n">img</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">status</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="n">FEATURING</span><span class="o">.</span><span class="n">get_song_from_latlon</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="get_sun_position_from_latlon"><a class="viewcode-back" href="../../source/webservice.html#webservice.features.get_sun_position_from_latlon">[docs]</a><span class="nd">@FEATURES_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/features/get_sun_position_from_latlon&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>

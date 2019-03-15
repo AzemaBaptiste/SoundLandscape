@@ -3,6 +3,7 @@ import json
 
 from flask import Blueprint, request
 
+from src import settings
 from src.webservice import status
 from src.features.build_features import Featuring
 from src.data.google_maps_images import GoogleImages
@@ -10,6 +11,18 @@ from src.data.google_maps_images import GoogleImages
 FEATURES_APP = Blueprint('features_app', __name__)
 FEATURING = Featuring()
 GOOGLE = GoogleImages()
+
+
+@FEATURES_APP.route("/api/features/get_lat_lon_time", methods=["POST", "GET"])
+def get_lat_lon_time():
+    """Get the lat lon & datetime from the picture.
+
+    :return: (dict) lat lon data
+    """
+    with open(settings.lat_lon, 'r') as fp:
+        data = json.load(fp)
+
+    return status.get_resource(data)
 
 
 @FEATURES_APP.route("/api/features/get_weather_from_latlon", methods=["POST", "GET"])
@@ -48,9 +61,8 @@ def get_song_from_latlon():
     res = json.loads(request.data)
     lat = res["latitude"]
     lng = res["longitude"]
-    img = GOOGLE.image_gps(lat, lng)
 
-    return status.get_resource(FEATURING.get_song_from_picture(img))
+    return status.get_resource(FEATURING.get_song_from_latlon(lat, lng))
 
 
 @FEATURES_APP.route("/api/features/get_sun_position_from_latlon", methods=["POST", "GET"])

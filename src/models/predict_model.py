@@ -9,7 +9,6 @@ import numpy as np
 import keras
 
 from src import settings
-# from src.models.train_model import TrainFaceDetector
 
 
 class PredictFace(object):
@@ -102,10 +101,20 @@ class PredictLandscape(object):
 
     def __init__(self):
         """Initiator."""
-        self.model = keras.models.load_model(settings.LAND_MODEL_PATH)
+        json_file = open(settings.LAND_ARCHI_PATH, 'r')
+        loaded_model_json = json_file.read()
+        json_file.close()
+        self.model = keras.models.model_from_json(loaded_model_json)
+        self.model.load_weights(settings.LAND_MODEL_PATH)
+        # self.model = keras.models.load_model(settings.LAND_MODEL_PATH)
         self.landscape_classes = {
             0: "city", 1: "field", 2: "forest", 3: "lake",
             4: "mountain", 5: "ocean", 6: "road"
+        }
+        self.landscape_classes = {
+            0: "apartment", 1: "bridge", 2: "congestion", 3: "construction",
+            4: "forest", 5: "highway", 6: "parking", 7: "promenade",
+            8: "street"
         }
 
     @staticmethod

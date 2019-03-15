@@ -143,11 +143,9 @@
   <h1>Source code for webservice.frame</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
-<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">send_file</span><span class="p">,</span> <span class="n">make_response</span>
 
-<span class="kn">from</span> <span class="nn">src.webservice</span> <span class="k">import</span> <span class="n">status</span>
 <span class="kn">from</span> <span class="nn">src.data.webcam_images</span> <span class="k">import</span> <span class="n">VideoCamera</span>
 
 <span class="n">CAMERA_APP</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;camera_app&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>

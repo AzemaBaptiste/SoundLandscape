@@ -73,7 +73,7 @@ class Featuring(object):
         ratios = self.get_ratio_percent_forest_water_from_picture(image)
         max_key = max(ratios.items(), key=operator.itemgetter(1))[0]
         if ratios[max_key] > 0.1:
-            return max_key
+            return max_key.split("_")[0]
         else:
             return None
 
@@ -113,7 +113,7 @@ class Featuring(object):
         sunset_time = res['results']['sunset']
         now_time = datetime.datetime.now().isoformat()
 
-        return {'time': now_time, 'sunrise': sunrise_time, 'sunset': sunset_time}
+        return {'now_time': now_time, 'sunrise': sunrise_time, 'sunset': sunset_time}
 
     @staticmethod
     def _interesting_poi(poi):
@@ -124,7 +124,7 @@ class Featuring(object):
         """
         list_poi = [
             'art_gallery', 'embassy', 'museum', 'stadium',
-            'neighborhood', 'park', 'school', 'gym'
+            'neighborhood', 'park', 'school', 'gym', "church"
         ]
 
         return bool(len(set(list_poi).intersection(set(poi.types))) > 0)
@@ -178,3 +178,4 @@ if __name__ == '__main__':
     print(sun_position)
     weather = obj.get_weather_from_position(obj.lat, obj.lng)
     print("weather:", weather)
+    obj.get_latlon_from_gps()

@@ -67,6 +67,7 @@ class Runner(FileSystemEventHandler):
         :param event: (Observer) the new file
         :return: (dict) save the lat, lon & datetime of the picture
         """
+        # print(event.src_path)
         time.sleep(2)
         try:
             data = gpsphoto.getGPSData(event.src_path)

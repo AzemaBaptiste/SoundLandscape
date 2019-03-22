@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>features.build_features &mdash; SoundLandscape 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SoundLandscape
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SoundLandscape</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>features.build_features</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for features.build_features</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">googleplaces</span> <span class="k">import</span> <span class="n">GooglePlaces</span>
+
+<span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">src.config.welcoming_sequence</span> <span class="k">import</span> <span class="n">WelcomingSequenceSettings</span>
+
+
+<div class="viewcode-block" id="Featuring"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring">[docs]</a><span class="k">class</span> <span class="nc">Featuring</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Module to generate data information.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initiator.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lng</span> <span class="o">=</span> <span class="mf">2.233111</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="mf">48.830446</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuweather_key</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">accuweather_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">google_key</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">google_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">google_poi</span> <span class="o">=</span> <span class="n">GooglePlaces</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">google_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">welcome</span> <span class="o">=</span> <span class="n">WelcomingSequenceSettings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forest_lower</span> <span class="o">=</span> <span class="p">(</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">220.0</span><span class="p">,</span> <span class="mf">170.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forest_upper</span> <span class="o">=</span> <span class="p">(</span><span class="mf">210.0</span><span class="p">,</span> <span class="mf">240.0</span><span class="p">,</span> <span class="mf">230.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">water_lower</span> <span class="o">=</span> <span class="p">(</span><span class="mf">170.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">water_upper</span> <span class="o">=</span> <span class="p">(</span><span class="mf">180.0</span><span class="p">,</span> <span class="mf">220.0</span><span class="p">,</span> <span class="mf">255.0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Featuring.get_image_mask"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.get_image_mask">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Select only the image area which contains forest or water.</span>
+
+<span class="sd">        :arg image: (PIL) image to analysis</span>
+<span class="sd">        :return: (dict) np.array of the masks</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;forest_mask&quot;</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">inRange</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forest_lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forest_upper</span><span class="p">),</span>
+            <span class="s2">&quot;water_mask&quot;</span><span class="p">:</span> <span class="n">cv2</span><span class="o">.</span><span class="n">inRange</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_upper</span><span class="p">)</span>
+        <span class="p">}</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_compute_ratio</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the ratio of forest &amp; water.&quot;&quot;&quot;</span>
+        <span class="n">ratios</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">ratios</span><span class="p">[</span><span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot;_ratio&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ratios</span>
+
+<div class="viewcode-block" id="Featuring.get_ratio_percent_forest_water_from_picture"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.get_ratio_percent_forest_water_from_picture">[docs]</a>    <span class="k">def</span> <span class="nf">get_ratio_percent_forest_water_from_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get ratio based on a gsp image.</span>
+
+<span class="sd">        :param image: (np.array) image</span>
+<span class="sd">        :return: (dict) ratios</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">masks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_image_mask</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ratio</span><span class="p">(</span><span class="o">**</span><span class="n">masks</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Featuring.get_song_from_picture"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.get_song_from_picture">[docs]</a>    <span class="k">def</span> <span class="nf">get_song_from_picture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get song based on a gsp image.</span>
+
+<span class="sd">        :param image: (np.array) image</span>
+<span class="sd">        :return: (str) kind of song</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ratios</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ratio_percent_forest_water_from_picture</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">max_key</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ratios</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">ratios</span><span class="p">[</span><span class="n">max_key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">max_key</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Featuring.extract_value_from_web"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.extract_value_from_web">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">extract_value_from_web</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get information from url.</span>
+
+<span class="sd">        :param url: (str) url of the request</span>
+<span class="sd">        :return: (str) content of the url</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Featuring.get_weather_from_position"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.get_weather_from_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_weather_from_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get weather from the position using ACCUWEATHER.</span>
+
+<span class="sd">        :param lat: (float) latitude</span>
+<span class="sd">        :param lng: (float) longitude</span>
+<span class="sd">        :return: (float) weather</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span>
+        <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+        <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;http://dataservice.accuweather.com&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/locations/v1/cities/geoposition/search?apikey=</span><span class="si">{self.accuweather_key}</span><span class="s2">&amp;q=</span><span class="si">{lat}</span><span class="s2">%2C%20</span><span class="si">{lng}</span><span class="s2">&quot;</span>
+        <span class="n">key_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_value_from_web</span><span class="p">(</span><span class="n">url</span><span class="p">)[</span><span class="s1">&#39;Key&#39;</span><span class="p">]</span>
+        <span class="n">url2</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{base_url}</span><span class="s2">/currentconditions/v1/</span><span class="si">{key_id}</span><span class="s2">?apikey=</span><span class="si">{self.accuweather_key}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_value_from_web</span><span class="p">(</span><span class="n">url2</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;WeatherText&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Featuring.get_sun_position_time_from_position"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.get_sun_position_time_from_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_sun_position_time_from_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the sunrise and sunset based on lat, long &amp; time.</span>
+
+<span class="sd">        :param lat: (str) latitude</span>
+<span class="sd">        :param lng: (str) longitude</span>
+<span class="sd">        :return: (dict) sunrise time &amp; sunset time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;https://api.sunrise-sunset.org/json?lat=</span><span class="si">{lat}</span><span class="s1">&amp;lng=</span><span class="si">{lng}</span><span class="s1">&amp;formatted=0&#39;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_value_from_web</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">sunrise_time</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="s1">&#39;sunrise&#39;</span><span class="p">]</span>
+        <span class="n">sunset_time</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">][</span><span class="s1">&#39;sunset&#39;</span><span class="p">]</span>
+        <span class="n">now_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">now_time</span><span class="p">,</span> <span class="s1">&#39;sunrise&#39;</span><span class="p">:</span> <span class="n">sunrise_time</span><span class="p">,</span> <span class="s1">&#39;sunset&#39;</span><span class="p">:</span> <span class="n">sunset_time</span><span class="p">}</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_interesting_poi</span><span class="p">(</span><span class="n">poi</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if we have a interesting poi for our needs.</span>
+
+<span class="sd">        :arg poi: (google_places) poi</span>
+<span class="sd">        :return: (bool) True if we&#39;ve 1 or more good poi</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">list_poi</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;art_gallery&#39;</span><span class="p">,</span> <span class="s1">&#39;embassy&#39;</span><span class="p">,</span> <span class="s1">&#39;museum&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;neighborhood&#39;</span><span class="p">,</span> <span class="s1">&#39;park&#39;</span><span class="p">,</span> <span class="s1">&#39;school&#39;</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">list_poi</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">poi</span><span class="o">.</span><span class="n">types</span><span class="p">)))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Featuring.get_poi_from_position"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.get_poi_from_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_poi_from_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the poi around me.</span>
+
+<span class="sd">        :param lat: (str) latitude</span>
+<span class="sd">        :param lng: (str) longitude</span>
+<span class="sd">        :return: (google_places) all poi</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">google_poi</span><span class="o">.</span><span class="n">nearby_search</span><span class="p">(</span><span class="n">lat_lng</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lat&quot;</span><span class="p">:</span> <span class="n">lat</span><span class="p">,</span> <span class="s2">&quot;lng&quot;</span><span class="p">:</span> <span class="n">lng</span><span class="p">},</span> <span class="n">radius</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Featuring.get_poi_information_from_position"><a class="viewcode-back" href="../../source/features.html#features.build_features.Featuring.get_poi_information_from_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_poi_information_from_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Select poi based on rules, and get their names and info about them.</span>
+
+<span class="sd">        :param lat: (str) latitude</span>
+<span class="sd">        :param lng: (str) longitude</span>
+<span class="sd">        :return: (dict) poi name|information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pois</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_poi_from_position</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span>
+        <span class="n">dict_poi</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">poi</span> <span class="ow">in</span> <span class="n">pois</span><span class="o">.</span><span class="n">places</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interesting_poi</span><span class="p">(</span><span class="n">poi</span><span class="p">):</span>
+                <span class="n">dict_poi</span><span class="p">[</span><span class="n">poi</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">welcome</span><span class="o">.</span><span class="n">information_about_poi</span><span class="p">(</span><span class="n">poi</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">dict_poi</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">dict_poi</span>
+        <span class="k">return</span> <span class="s2">&quot;None&quot;</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Featuring</span><span class="p">()</span>
+    <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">IMAGE_GPS_PATH</span><span class="p">,</span> <span class="s2">&quot;48.8584+2.29466.jpg&quot;</span><span class="p">)</span>
+    <span class="n">np_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">img_path</span><span class="p">))</span>
+    <span class="n">ratios</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_ratio_percent_forest_water_from_picture</span><span class="p">(</span><span class="n">np_img</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ratio:&quot;</span><span class="p">,</span> <span class="n">ratios</span><span class="p">)</span>
+    <span class="n">song</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_song_from_picture</span><span class="p">(</span><span class="n">np_img</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;song:&quot;</span><span class="p">,</span> <span class="n">song</span><span class="p">)</span>
+    <span class="n">poi</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_poi_from_position</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">lng</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">poi</span><span class="o">.</span><span class="n">places</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;poi:&quot;</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">poi</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_poi_information_from_position</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">lng</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Information poi:&quot;</span><span class="p">,</span> <span class="n">poi</span><span class="p">)</span>
+    <span class="n">sun_position</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_sun_position_time_from_position</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">lng</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sun_position</span><span class="p">)</span>
+    <span class="n">weather</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get_weather_from_position</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">lng</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;weather:&quot;</span><span class="p">,</span> <span class="n">weather</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, JulienW./ThibaultD./BaptisteA./AdamB.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

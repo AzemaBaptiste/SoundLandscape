@@ -115,8 +115,7 @@ class SonicRoadSettings(object):
         else:
             return speed * 2 - 80
 
-    @staticmethod
-    def category_from_now_sunset_sunrise_time(**kwargs):
+    def category_from_now_sunset_sunrise_time(self, **kwargs):
         """Get category (among night, afternoon, morning, sunset, sunrise) based on sunset, sunrise and now time.
 
         :param now_time: (datetime) local time in str ex : 2019-02-06T07:13:15+00:00
@@ -138,7 +137,7 @@ class SonicRoadSettings(object):
         bisect_index = bisect.bisect_left(time_seq, now_time)
         categories = ["night", "sunrise", "morning", "afternoon", "sunset", "night"]
 
-        return categories[bisect_index]
+        return self.rules["day/night"][categories[bisect_index]]
 
     def load_user_preferences(self, driver):
         """Load user preferences.
@@ -158,14 +157,15 @@ class SonicRoadSettings(object):
         :arg mood: (str) mood
         :return: (dict) read user preferences
         """
-        return self.rules[mood]
+        return self.rules["mood"][mood]
 
-    def get_recommendations_from_params(self, **kwargs):
+    def get_recommendations_from_params(self, params):
         """Get spotify recommendations.
 
         :return: (str) URL of mp3 preview of the recommended song
         """
         token = self.credentials.get_access_token()
         spotify = spotipy.Spotify(auth=token)
+        # import pdb; pdb.set_trace()
 
-        return spotify.recommendations(limit=50, **kwargs)
+        return spotify.recommendations(limit=50, **params)

@@ -114,7 +114,7 @@ class PredictLandscape(object):
         self.landscape_classes = {
             0: "apartment", 1: "bridge", 2: "congestion", 3: "construction",
             4: "forest", 5: "highway", 6: "parking", 7: "promenade",
-            8: "street"
+            8: "street", 9: "other"
         }
 
     @staticmethod

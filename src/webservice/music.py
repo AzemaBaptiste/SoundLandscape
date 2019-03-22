@@ -27,7 +27,7 @@ def get_recommendations():
     """
     params = json.loads(request.data)
 
-    return status.get_resource(SONICROAD.get_recommendations_from_params(**params))
+    return status.get_resource(SONICROAD.get_recommendations_from_params(params))
 
 
 @MUSIC_APP.route("/api/music/update_params", methods=["POST", "GET"])
@@ -58,7 +58,7 @@ def get_driver_preferences():
 
     :return: (list) driver preferences
     """
-    driver = request.data
+    driver = json.loads(request.data)
 
     return status.get_resource(SONICROAD.load_user_preferences(driver))
 
@@ -69,9 +69,9 @@ def get_speed_energy():
 
     :return: (dict) energy target
     """
-    speed = request.data
+    speed = json.loads(request.data)["speed"]
 
-    return status.get_resource(({'target_energy': SONICROAD.sigmoid_from_speed(speed, -0.1, 0.4, 50)}))
+    return status.get_resource((SONICROAD.sigmoid_from_speed(speed, -0.1, 0.4, 50)))
 
 
 @MUSIC_APP.route("/api/music/get_mood", methods=["POST", "GET"])
@@ -80,6 +80,6 @@ def get_mood():
 
     :return: (dict) params update
     """
-    mood = request.data
+    mood = json.loads(request.data)["mood"]
 
     return status.get_resource(SONICROAD.load_mood_preferences(mood))

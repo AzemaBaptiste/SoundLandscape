@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import base64
+
 import cv2
 
 from flask import Blueprint, request
@@ -19,9 +21,9 @@ def get_face_from_image():
     :return: (src) face'name
     """
     try:
-        data = request.data
+        data = base64.b64decode(request.data)
     except Exception as _:
-        data = request.content
+        data = base64.b64decode(request.content)
     img = np.fromstring(data, np.uint8)
     img = cv2.imdecode(img, cv2.IMREAD_COLOR)
 

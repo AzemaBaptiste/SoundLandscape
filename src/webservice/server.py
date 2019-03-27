@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
-import flask
-
 from pathlib import Path
+
+import flask
+from flask_cors import CORS
 
 project_dir = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(project_dir))
@@ -15,12 +16,15 @@ from src.webservice.frame import CAMERA_APP
 from src.webservice.music import MUSIC_APP
 
 
+app = flask.Flask(__name__)
+CORS(app)
+
+app.register_blueprint(FACE_APP)
+app.register_blueprint(MOOD_APP)
+app.register_blueprint(LANDSCAPE_APP)
+app.register_blueprint(FEATURES_APP)
+app.register_blueprint(CAMERA_APP)
+app.register_blueprint(MUSIC_APP)
+
 if __name__ == '__main__':
-    app = flask.Flask(__name__)
-    app.register_blueprint(FACE_APP)
-    app.register_blueprint(MOOD_APP)
-    app.register_blueprint(LANDSCAPE_APP)
-    app.register_blueprint(FEATURES_APP)
-    app.register_blueprint(CAMERA_APP)
-    app.register_blueprint(MUSIC_APP)
     app.run(host="127.0.0.1", port=5000, threaded=False)

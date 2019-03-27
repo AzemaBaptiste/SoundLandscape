@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import base64
+
 import cv2
 
 from flask import Blueprint, send_file, make_response
@@ -19,8 +21,9 @@ def get_camera_face():
     _, img_encoded = cv2.imencode('.jpg', frame)
     CAMERA_FACE.__del__()
 
-    return img_encoded.tostring()
+    jpg_as_text = base64.b64encode(img_encoded)
 
+    return jpg_as_text
 
 @CAMERA_APP.route("/api/frame/get_camera_front", methods=["POST", "GET"])
 def get_camera_front():
@@ -33,4 +36,6 @@ def get_camera_front():
     _, img_encoded = cv2.imencode('.jpg', frame)
     CAMERA_FRONT.__del__()
 
-    return img_encoded.tostring()
+    jpg_as_text = base64.b64encode(img_encoded)
+
+    return jpg_as_text

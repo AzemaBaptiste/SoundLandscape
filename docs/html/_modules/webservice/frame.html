@@ -144,7 +144,7 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
 
-<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">send_file</span><span class="p">,</span> <span class="n">make_response</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span>
 
 <span class="kn">from</span> <span class="nn">src.data.webcam_images</span> <span class="k">import</span> <span class="n">VideoCamera</span>
 
@@ -153,9 +153,9 @@
 
 <div class="viewcode-block" id="get_camera_face"><a class="viewcode-back" href="../../source/webservice.html#webservice.frame.get_camera_face">[docs]</a><span class="nd">@CAMERA_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/frame/get_camera_face&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_camera_face</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Get the weather from the lat lng.</span>
+    <span class="sd">&quot;&quot;&quot;Get img from face.</span>
 
-<span class="sd">    :return: (str) weather type</span>
+<span class="sd">    :return: (str) face image</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CAMERA_FACE</span> <span class="o">=</span> <span class="n">VideoCamera</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">frame</span> <span class="o">=</span> <span class="n">CAMERA_FACE</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span>
@@ -167,9 +167,9 @@
 
 <div class="viewcode-block" id="get_camera_front"><a class="viewcode-back" href="../../source/webservice.html#webservice.frame.get_camera_front">[docs]</a><span class="nd">@CAMERA_APP</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/api/frame/get_camera_front&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;GET&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_camera_front</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Get the weather from the lat lng.</span>
+    <span class="sd">&quot;&quot;&quot;Get img from front.</span>
 
-<span class="sd">    :return: (str) weather type</span>
+<span class="sd">    :return: (str) front image</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CAMERA_FRONT</span> <span class="o">=</span> <span class="n">VideoCamera</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">frame</span> <span class="o">=</span> <span class="n">CAMERA_FRONT</span><span class="o">.</span><span class="n">get_frame</span><span class="p">()</span>

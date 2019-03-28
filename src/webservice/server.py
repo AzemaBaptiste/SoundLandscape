@@ -14,6 +14,7 @@ from src.webservice.mood import MOOD_APP
 from src.webservice.recognition import FACE_APP
 from src.webservice.frame import CAMERA_APP
 from src.webservice.music import MUSIC_APP
+from src.webservice.gps import GPS_APP
 
 
 app = flask.Flask(__name__)
@@ -25,6 +26,7 @@ app.register_blueprint(LANDSCAPE_APP)
 app.register_blueprint(FEATURES_APP)
 app.register_blueprint(CAMERA_APP)
 app.register_blueprint(MUSIC_APP)
+app.register_blueprint(GPS_APP)
 
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=5000, threaded=False)

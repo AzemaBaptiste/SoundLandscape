@@ -166,6 +166,5 @@ class SonicRoadSettings(object):
         """
         token = self.credentials.get_access_token()
         spotify = spotipy.Spotify(auth=token)
-        # import pdb; pdb.set_trace()
 
         return spotify.recommendations(limit=50, **params)

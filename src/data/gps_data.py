@@ -18,12 +18,11 @@ class GPSInfo(object):
         data_line = self.m_serial.readline().decode()
         data = data_line.split(",")
         if data[0] == "$GPGGA":
-            import pdb; pdb.set_trace()
             msg = pynmea2.parse(data_line)
             try:
                 print(msg.latitude)
                 print(msg.longitude)
-                return {"latitude": msg.latitude, "longitude": msg.longitude, "timestamp": msg.timestamp}
+                return {"latitude": msg.latitude, "longitude": msg.longitude, "timestamp": str(msg.timestamp)}
             except:
                 return self.get_latlon_from_gps()
         else:

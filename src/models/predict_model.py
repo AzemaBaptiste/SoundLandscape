@@ -31,11 +31,12 @@ class PredictFace(object):
         names = list()
         locations = face_recognition.face_locations(image)
         if not locations:
-            locations = []
+            locations = ["0"]
+            names = ["adam"]
         encodings = face_recognition.face_encodings(image, locations)
         for encoding in encodings:
             matches = face_recognition.compare_faces(self.face_encoding, encoding)
-            name = "adam"
+            name = "unknow"
             if True in matches:
                 first_match_index = matches.index(True)
                 name = self.face_name[first_match_index]

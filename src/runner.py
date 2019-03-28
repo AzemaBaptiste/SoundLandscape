@@ -96,7 +96,7 @@ class Runner(object):
         print(url)
 
         return requests.post('http://127.0.0.1:5000/api/' + url, json=params).json()['result']
-
+g
     @staticmethod
     def get_img_features(url, data, headers):
         """Get features from image.
@@ -181,15 +181,14 @@ class Runner(object):
 
         :return: (dict) data
         """
-        gps = requests.post('http://127.0.0.1:5000/api/gps/get_latlon')
-        import pdb;pdb.set_trace()
-        params = {"latitude": gps.latitude, "longitude": gps.longitude}
+        gps = requests.post('http://127.0.0.1:5000/api/gps/get_latlon').json()["result"]
+        params = {"latitude": gps["latitude"], "longitude": gps["longitude"]}
         headers = {'content-type': 'image/jpeg'}
         data = dict()
         data["speed"] = requests.post('http://127.0.0.1:5000/api/gps/get_speed').json()["result"]
-        data["latitude"] = gps.latitude
-        data["longitude"] = gps.longitude
-        data["datetime"] = gps.timestamp
+        data["latitude"] = gps["latitude"]
+        data["longitude"] = gps["longitude"]
+        data["datetime"] = gps["timestamp"]
         data["weather"] = "Sunny"
         data["ratios"] = self.get_features("features/get_ratio_mask_from_latlon", params)
         data["sound"] = self.get_features("features/get_song_from_latlon", params)
@@ -203,7 +202,10 @@ class Runner(object):
         sounds = sounds + [data["sound"]]
         if sounds:
             self.play_sound(sounds)
-        self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", data["face"][0][0])
+        try:
+            self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", data["face"][0][0])
+        except:
+            self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", "adam")
         data["sounds"] = sounds
         self.update_params(data)
         music = self.get_features("music/get_recommendations", self.music_params)

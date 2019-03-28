@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
+import json
 
 import cv2
 
@@ -21,9 +22,9 @@ def get_face_from_image():
     :return: (src) face'name
     """
     try:
-        data = base64.b64decode(request.data)
+        data = base64.b64decode(json.loads(request.data.decode())["data"])
     except Exception as _:
-        data = base64.b64decode(request.content)
+        data = base64.b64decode(json.loads(request.content.decode())["data"])
     img = np.fromstring(data, np.uint8)
     img = cv2.imdecode(img, cv2.IMREAD_COLOR)
 

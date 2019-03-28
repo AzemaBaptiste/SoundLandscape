@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
-
+import json
 import cv2
 
 from flask import Blueprint, request
@@ -21,10 +21,11 @@ def get_mood_from_image():
     :return: (src) mood
     """
     try:
-        data = base64.b64decode(request.data)
+        data = base64.b64decode(json.loads(request.data.decode())["data"])
     except Exception as _:
-        data = base64.b64decode(request.content)
-    img = np.fromstring(data, np.uint8)
-    img = cv2.imdecode(img, cv2.IMREAD_COLOR)
+        data = base64.b64decode(json.loads(request.content.decode())["data"])
+
+    img_array = np.fromstring(data, np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
 
     return status.get_resource(MOOD_MODEL.predict(img))

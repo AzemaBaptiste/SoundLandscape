@@ -5,7 +5,7 @@ from src.webservice import status
 from src.data.gps_data import GPSInfo
 
 GPS_APP = Blueprint('gps_app', __name__)
-GPS = GPSInfo("COM4")
+GPS = GPSInfo("COM5")
 
 
 @GPS_APP.route("/api/gps/get_latlon", methods=["POST", "GET"])

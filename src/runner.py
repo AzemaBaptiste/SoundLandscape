@@ -181,7 +181,8 @@ class Runner(object):
 
         :return: (dict) data
         """
-        gps = requests.post('http://127.0.0.1:5000/api/gps/get_latlon').json()["result"]
+        gps = requests.post('http://127.0.0.1:5000/api/gps/get_latlon')
+        import pdb;pdb.set_trace()
         params = {"latitude": gps.latitude, "longitude": gps.longitude}
         headers = {'content-type': 'image/jpeg'}
         data = dict()
@@ -193,9 +194,6 @@ class Runner(object):
         data["ratios"] = self.get_features("features/get_ratio_mask_from_latlon", params)
         data["sound"] = self.get_features("features/get_song_from_latlon", params)
         data["poi_information"] = self.get_features("features/get_interesting_poi_information_from_latlon", params)
-        sun = self.get_features("features/get_sun_position_from_latlon", params)
-        data["sunrise"] = sun["sunrise"]
-        data["sunset"] = sun["sunset"]
         img_encoded_face = requests.post('http://127.0.0.1:5000/api/frame/get_camera_face')
         data["mood"] = self.get_img_features("mood/get_mood_from_image", img_encoded_face.content, headers)
         data["face"] = self.get_img_features("face/get_face_from_image", img_encoded_face.content, headers)

@@ -4,8 +4,7 @@ import playsound
 import pyproj
 import requests
 import pygame
-import serial
-import pynmea2
+import numpy as np
 
 pygame.mixer.init()
 
@@ -17,30 +16,11 @@ class Runner(object):
         """Initiator."""
         self.data = None
         self.GEOD = pyproj.Geod(ellps='WGS84')
-        self.m_serial = serial.Serial("COM4", 4800)
         self.music_params = {
             'acousticness': 0.5, 'danceability': 0.5, 'energy': 0.5,
             'instrumentalness': 0.5, 'tempo': 80, 'country': 'FR',
             'valence': 0.5, 'popularity': 60, 'seed_genres': ['french']
         }
-
-    def get_latlon_from_gps(self):
-        """Read the latlon&time from the gps.
-
-        :return: (list) lat, lon, datetime
-        """
-        data_line = self.m_serial.readline().decode()
-        data = data_line.split(",")
-        if data[0] == "$GPGGA":
-            msg = pynmea2.parse(data_line)
-            try:
-                print(msg.latitude)
-                print(msg.longitude)
-                return msg
-            except:
-                return self.get_latlon_from_gps()
-        else:
-            return self.get_latlon_from_gps()
 
     @staticmethod
     def play_sound(key):
@@ -132,16 +112,20 @@ class Runner(object):
 
     @staticmethod
     def get_music(music):
-        """Take music which contains preview song.
+        """Take music which contains preview song. Take it based on weighted random choice
 
         :param music: (dict) spotify results
         :return: (str) url
         """
-        for t in music["tracks"]:
+        lmusic = {"empty": "empty"}
+        for idx, t in enumerate(music["tracks"][::-1]):
             res = t["preview_url"]
             if res:
-                return res
-        return "empty"
+                lmusic[t] = idx + 1
+
+        p = [x/sum(lmusic.values()) for x in lmusic.values()]
+
+        return np.random.choice(list(lmusic.keys()), 1, p=p)
 
     @staticmethod
     def play_music_from_url(url):
@@ -159,15 +143,13 @@ class Runner(object):
 
         :param data: (dict) env data
         """
-        if not data["sound"]:
-            data["sound"] = []
         if not data["sounds"]:
             data["sounds"] = []
 
-        if "forest" in data["sound"] or "forest" in data["sounds"]:
+        if "forest" in data["sounds"]:
             self.music_params["energy"] = 0.5
             self.music_params["valence"] = 0.5
-        elif "water" in data["sound"] or "water" in data["sounds"]:
+        elif "water" in data["sounds"]:
             self.music_params["energy"] = 0.8
             self.music_params["valence"] = 0.8
         else:
@@ -180,30 +162,34 @@ class Runner(object):
             self.music_params["tempo"] = int(data["speed"] * 2)
             self.music_params["energy"] += 0.1
 
-    def api_calls(self, gps):
+    def _debug_(self):
+        """
+
+        :return:
+        """
+        # latitude = 48.840924
+        # longitude = 2.251493
+        # latitude = 48.861539
+        # longitude = 2.339039
+        # if self.data:
+        #     data["speed"] = self.compute_seed(data)
+        # else:
+        #     data["speed"] = 0
+
+    def api_calls(self):
         """Call all the api.
 
-        :param gps: (gps.obj) gps values
         :return: (dict) data
         """
-        latitude = gps.latitude
-        longitude = gps.longitude
-        #latitude = 48.840924
-        #longitude = 2.251493
-        #latitude = 48.861539
-        #longitude = 2.339039
-        params = {"latitude": latitude, "longitude": longitude}
+        gps = requests.post('http://127.0.0.1:5000/api/gps/get_latlon').json()["result"]
+        params = {"latitude": gps.latitude, "longitude": gps.longitude}
         headers = {'content-type': 'image/jpeg'}
         data = dict()
-        data["latitude"] = latitude
-        data["longitude"] = longitude
+        data["speed"] = requests.post('http://127.0.0.1:5000/api/gps/get_speed').json()["result"]
+        data["latitude"] = gps.latitude
+        data["longitude"] = gps.longitude
         data["datetime"] = gps.timestamp
-        if self.data:
-            data["speed"] = self.compute_seed(data)
-            data["speed"] = 0
-        else:
-            data["speed"] = 0
-        data["weather"] = "Rainy"
+        data["weather"] = "Sunny"
         data["ratios"] = self.get_features("features/get_ratio_mask_from_latlon", params)
         data["sound"] = self.get_features("features/get_song_from_latlon", params)
         data["poi_information"] = self.get_features("features/get_interesting_poi_information_from_latlon", params)
@@ -222,7 +208,7 @@ class Runner(object):
         try:
             self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", data["face"][0][0])
         except:
-            self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", "julien")
+            self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", "adam")
 
         data["sounds"] = sounds
         self.update_params(data)
@@ -237,9 +223,8 @@ class Runner(object):
         """Run the application."""
         while True:
             print("check")
-            gps = self.get_latlon_from_gps()
-            self.data = self.api_calls(gps)
-            print(self.data)
+            data = self.api_calls()
+            print(data)
             time.sleep(5)
 
 

@@ -33,7 +33,7 @@ class PredictFace(object):
         encodings = face_recognition.face_encodings(image, locations)
         for encoding in encodings:
             matches = face_recognition.compare_faces(self.face_encoding, encoding)
-            name = "Unknown"
+            name = "adam"
             if True in matches:
                 first_match_index = matches.index(True)
                 name = self.face_name[first_match_index]
@@ -106,11 +106,6 @@ class PredictLandscape(object):
         json_file.close()
         self.model = keras.models.model_from_json(loaded_model_json)
         self.model.load_weights(settings.LAND_MODEL_PATH)
-        # self.model = keras.models.load_model(settings.LAND_MODEL_PATH)
-        self.landscape_classes = {
-            0: "city", 1: "field", 2: "forest", 3: "lake",
-            4: "mountain", 5: "ocean", 6: "road"
-        }
         self.landscape_classes = {
             0: "apartment", 1: "bridge", 2: "congestion", 3: "construction",
             4: "forest", 5: "highway", 6: "parking", 7: "promenade",

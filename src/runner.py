@@ -196,20 +196,16 @@ class Runner(object):
         sun = self.get_features("features/get_sun_position_from_latlon", params)
         data["sunrise"] = sun["sunrise"]
         data["sunset"] = sun["sunset"]
-        img_encoded = requests.post('http://127.0.0.1:5000/api/frame/get_camera_face')
-        data["mood"] = self.get_img_features("mood/get_mood_from_image", img_encoded.content, headers)
-        data["face"] = self.get_img_features("face/get_face_from_image", img_encoded.content, headers)
-        img_encoded = requests.post('http://127.0.0.1:5000/api/frame/get_camera_front')
-        data["landscape"] = self.get_img_features("landscape/get_landscape_from_image", img_encoded.content, headers)
+        img_encoded_face = requests.post('http://127.0.0.1:5000/api/frame/get_camera_face')
+        data["mood"] = self.get_img_features("mood/get_mood_from_image", img_encoded_face.content, headers)
+        data["face"] = self.get_img_features("face/get_face_from_image", img_encoded_face.content, headers)
+        img_encoded_front = requests.post('http://127.0.0.1:5000/api/frame/get_camera_front')
+        data["landscape"] = self.get_img_features("landscape/get_landscape_from_image", img_encoded_front.content, headers)
         sounds = self.sound_to_play(data["poi_information"])
         sounds = sounds + [data["sound"]]
         if sounds:
             self.play_sound(sounds)
-        try:
-            self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", data["face"][0][0])
-        except:
-            self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", "adam")
-
+        self.music_params["seed_genres"] = self.get_features("music/get_driver_preferences", data["face"][0][0])
         data["sounds"] = sounds
         self.update_params(data)
         music = self.get_features("music/get_recommendations", self.music_params)

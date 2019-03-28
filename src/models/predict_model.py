@@ -30,6 +30,8 @@ class PredictFace(object):
         image.setflags(write=True)
         names = list()
         locations = face_recognition.face_locations(image)
+        if not locations:
+            locations = []
         encodings = face_recognition.face_encodings(image, locations)
         for encoding in encodings:
             matches = face_recognition.compare_faces(self.face_encoding, encoding)
